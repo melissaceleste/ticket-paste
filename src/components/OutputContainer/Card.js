@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import React from "react";
+import { PieChart } from "react-minimal-pie-chart";
 import moment from "moment";
-import Moment from "moment";
+import getDiffBetweenTwoTimes from "../../services/getDiffBetweenTwoTimes";
 
 function Card({
   name,
@@ -19,25 +20,10 @@ function Card({
   helpNeeded,
   gotThroughQaAtFirstTime,
 }) {
-  /*   function msToTime(duration) {
-    var milliseconds = Math.floor((duration % 1000) / 100),
-      seconds = Math.floor((duration / 1000) % 60),
-      minutes = Math.floor((duration / (1000 * 60)) % 60),
-      hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
-
-    hours = hours < 10 ? "0" + hours : hours;
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    seconds = seconds < 10 ? "0" + seconds : seconds;
-
-    return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
-  } */
-
   //in Progress
-  const inProgressStartMomentDateObject = moment(inProgressStart);
-  const inProgressEndMomentDateObject = moment(inProgressEnd);
-
-  var DurationInProgressInMinutes = inProgressEndMomentDateObject.diff(
-    inProgressStartMomentDateObject,
+  var DurationInProgressInMinutes = getDiffBetweenTwoTimes(
+    inProgressStart,
+    inProgressEnd,
     "minutes"
   );
   if (!inProgressEnd || !inProgressStart) {
@@ -45,10 +31,9 @@ function Card({
   }
 
   //Testing
-  const TestingEndMomentDateObject = moment(TestingEnd);
-  const TestingStartMomentDateObject = moment(TestingStart);
-  var DurationTestingInMinutes = TestingEndMomentDateObject.diff(
-    TestingStartMomentDateObject,
+  var DurationTestingInMinutes = getDiffBetweenTwoTimes(
+    TestingStart,
+    TestingEnd,
     "minutes"
   );
   if (!TestingEnd || !TestingStart) {
@@ -56,28 +41,17 @@ function Card({
   }
 
   // Polishing after Testing
-  const polishingAfterTestingEndMomentDateObject = moment(
-    polishingAfterTestingEnd
+  var DurationPolishingInMinutes = getDiffBetweenTwoTimes(
+    polishingAfterTestingStart,
+    polishingAfterTestingEnd,
+    "minutes"
   );
-  const polishingAfterTestingStartMomentDateObject = moment(
-    polishingAfterTestingStart
-  );
-  var DurationPolishingInMinutes =
-    polishingAfterTestingEndMomentDateObject.diff(
-      polishingAfterTestingStartMomentDateObject,
-      "minutes"
-    );
   if (isNaN(polishingAfterTestingEnd) || isNaN(polishingAfterTestingStart)) {
     DurationPolishingInMinutes = 0;
   }
 
   //QA
-  const QAEndMomentDateObject = moment(QAEnd);
-  const QAStartMomentDateObject = moment(QAStart);
-  var DurationQAInMinutes = QAEndMomentDateObject.diff(
-    QAStartMomentDateObject,
-    "minutes"
-  );
+  var DurationQAInMinutes = getDiffBetweenTwoTimes(QAStart, QAEnd, "minutes");
   if (!QAEnd || !QAStart) {
     DurationQAInMinutes = 0;
   }
@@ -88,17 +62,9 @@ function Card({
     DurationTestingInMinutes +
     DurationPolishingInMinutes;
 
-  console.log("DurationInProgressInMinutes", DurationInProgressInMinutes);
-  console.log("DurationQAInMinutes", DurationQAInMinutes);
-  console.log("DurationTestingInMinutes", DurationTestingInMinutes);
-  console.log("DurationPolishingInMinutes", DurationPolishingInMinutes);
-
-  console.log("DurationCompletly", DurationCompletly);
-
   // Kreisdiagram
   const DurationInProgressInPercent =
     (DurationInProgressInMinutes * 100) / DurationCompletly;
-  console.log("DurationInProgressInPercent", DurationInProgressInPercent);
   const DurationQAInPercent = (DurationQAInMinutes * 100) / DurationCompletly;
   const DurationTestingInPercent =
     (DurationTestingInMinutes * 100) / DurationCompletly;
@@ -110,14 +76,56 @@ function Card({
   const DiffSollIst = Soll - DurationInProgressInMinutes;
   //beim Balken vielleicht Spielraum von 1-2 Stunden lassen, bis er rot wird
 
-  //console.log(DiffSollIst);
+  const firstContactInLocalDateFormat = moment
+    .utc()
+    .local(firstContact)
+    .format("DD.MM.YYYY");
+
+  const dataForPieChart = [
+    {
+      title: "IN PROGRESS",
+      value: DurationInProgressInMinutes,
+      color: "#ffc2e2",
+    },
+    { title: "QA", value: DurationQAInMinutes, color: "#f4fdb1" },
+    {
+      title: "TESTING",
+      value: DurationTestingInMinutes,
+      color: "#d9ffd8",
+    },
+    {
+      title: "POLISHING",
+      value: DurationPolishingInMinutes,
+      color: "#bbbaff",
+    },
+  ];
 
   return (
     <CardContainer>
       <SublineBig>{name}</SublineBig>
-      <TextNormal>{firstContact}</TextNormal>
-      {!helpNeeded && <div>☆</div>}
-      {!gotThroughQaAtFirstTime && <div>★</div>}
+      <PieChart
+        style={{ height: "100px" }}
+        lineWidth={25}
+        rounded
+        data={dataForPieChart}
+        label={({ dataEntry }) => dataEntry.title}
+        labelStyle={(index) => ({
+          fill: dataForPieChart[index].color,
+          fontSize: "15px",
+          fontFamily: "sans-serif",
+        })}
+        radius={42}
+        labelPosition={112}
+      />
+      <FurtherInformation>
+        <TextNormal>{firstContactInLocalDateFormat}</TextNormal>
+        {!helpNeeded && <div>☆</div>}
+        {!gotThroughQaAtFirstTime && <div>★</div>}
+      </FurtherInformation>
+      <ProgressCharInner
+        DurationInProgressInMinutes={DurationInProgressInMinutes}
+      ></ProgressCharInner>
+      <ProgressCharOuter></ProgressCharOuter>
     </CardContainer>
   );
 }
@@ -134,6 +142,31 @@ const TextNormal = styled.span`
   font-size: 14px;
 `;
 
+const FurtherInformation = styled.div`
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-evenly;
+`;
+
+const ProgressCharInner = styled.div`
+  width: ${(props) => props.DurationInProgressInMinutes + "px"};
+  height: 10px;
+  background-color: #7fff00;
+`;
+
+const ProgressCharOuter = styled.div`
+  width: 480px;
+  height: 10px;
+  background-color: #d3d3d3;
+`;
+
 const CardContainer = styled.div`
   border: 1px solid pink;
+  margin: 10px;
+  width: 600px;
 `;
+
+// polishing nur testing oder auch qa? -> sonst umbennen
+// Nacht rausrechnen?
+// server
+// deployen
