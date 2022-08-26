@@ -1,0 +1,24 @@
+[
+  {
+    "name": "COSV-6892",
+    "dateOfFirstContact": "2022-08-22T12:00",
+    "inProgress": { "start": "2022-08-22T12:00", "ende": "2022-08-22T18:00" },
+    "Testing": { "start": "2022-08-22T18:00", "ende": "2022-08-23T10:00" },
+    //  "SecondTesting": { "start": "", "ende": "" },
+    "QA": { "start": "2022-08-23T10:00", "ende": "2022-08-23T12:00" },
+    "Rejected": { "start": "", "ende": "" },
+    "helpNeeded": true
+  },
+  {
+    "name": "COSV-6894",
+    "dateOfFirstContact": "2022-08-24T12:00",
+    "inProgress": { "start": "2022-08-22T12:00", "ende": "2022-08-22T18:00" },
+    "Testing": { "start": "2022-08-22T18:00", "ende": "2022-08-23T10:00" },
+    // "SecondTesting": { "start": "2022-08-22T18:00", "ende": "2022-08-23T10:00" },
+    "QA": { "start": "2022-08-23T10:00", "ende": "2022-08-23T12:00" },
+    "Rejected": { "start": "2022-08-23T10:00", "ende": "2022-08-23T13:00" },
+    "helpNeeded": true
+  }
+]
+
+//1997-07-16T19:20+01:00
