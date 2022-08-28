@@ -2,156 +2,127 @@ import styled from "styled-components";
 import React, { useState } from "react";
 
 function InputContainer({
-  /*  name,
-  setName,
-  firstContact,
-  setFirstContact,
-  inProgressStart,
-  setInProgressStart,
-  inProgressEnd,
-  setInProgressEnd,
-  QAStart,
-  setQAStart,
-  QAEnd,
-  setQAEnd,
-  TestingStart,
-  setTestingStart,
-  TestingEnd,
-  setTestingEnd,
-  polishingAfterQAStart, */
   setPolishingAfterQAStart,
-  //polishingAfterQAEnd,
   setPolishingAfterQAEnd,
   setPolishingAfterTestingStart,
   setPolishingAfterTestingEnd,
-  //helpNeeded,
   setHelpNeeded,
   handleSubmit,
   returntFromTesting,
   setReturntFromTesting,
   setGotThroughQaAtFirstTime,
 }) {
-  // console.log("firstContact", firstContact);
   const [needsPolishingAfterQA, setNeedsPolishingAfterQA] = useState(false);
+  const [addNewTicket, setAddNewTicket] = useState(false);
   return (
     <div>
-      <SublineBig>Neues Ticket</SublineBig>
+      <SublineBig
+        onClick={() => {
+          setAddNewTicket(true);
+        }}
+      >
+        NEUES TICKET +
+      </SublineBig>
       {/* vielleicht hier nur svg mit plus */}
-      <form onSubmit={handleSubmit}>
-        <InputText
-          /* onChange={(event) => {
-            setName(event.target.value);
-          }} */
-          name="name"
-          type="text"
-          placeholder="Ticket-Name"
-        ></InputText>
-        <InputText
-          /*  onChange={(event) => {
-            setFirstContact(event.target.value);
-          }} */
-          name="firstContact"
-          type="datetime-local"
-          placeholder="Erster Kontakt"
-        ></InputText>
-        <div>
-          <TextNormal>IN PROGRESS</TextNormal>
-          <div>
-            <InputDate
-              /* onChange={(event) => {
-                setInProgressStart(event.target.value);
-              }} */
-              name="inProgressStart"
-              type="datetime-local"
-              placeholder="Start"
-            ></InputDate>
-            <InputDate
-              /* onChange={(event) => {
-                setInProgressEnd(event.target.value);
-              }} */
-              name="inProgressEnd"
-              type="datetime-local"
-              placeholder="Ende"
-            ></InputDate>
-          </div>
-        </div>
-        <div>
-          <TextNormal>TESTING</TextNormal>
-          <br></br>
-          <div>
-            <InputDate
-              /*  onChange={(event) => {
-                setTestingStart(event.target.value);
-              }} */
-              name="TestingStart"
-              type="datetime-local"
-              placeholder="Start"
-            ></InputDate>
-            <InputDate
-              /*  onChange={(event) => {
-                setTestingEnd(event.target.value);
-              }} */
-              name="TestingEnd"
-              type="datetime-local"
-              placeholder="Ende"
-            ></InputDate>
-          </div>
-        </div>
-        <TextNormal>Kam aus Testing zurück?</TextNormal>
-        <input
-          type="checkbox"
-          name="returntFromTesting"
-          onChange={() => {
-            setReturntFromTesting(true);
-          }}
-        ></input>
-        {returntFromTesting && (
-          <div>
-            <InputDate
-              onChange={(event) => {
-                setPolishingAfterTestingStart(event.target.value);
+      {addNewTicket && (
+        <Form onSubmit={handleSubmit}>
+          <Row>
+            <InputText
+              name="name"
+              type="text"
+              placeholder="Ticket-Name"
+            ></InputText>
+          </Row>
+          <Row>
+            <SublineSmall>IN PROGRESS</SublineSmall>
+            <div>
+              <InputDate
+                name="inProgressStart"
+                type="datetime-local"
+                placeholder="Start"
+              ></InputDate>
+              <InputDate
+                name="inProgressEnd"
+                type="datetime-local"
+                placeholder="Ende"
+              ></InputDate>
+            </div>
+          </Row>
+          <Row>
+            <SublineSmall>TESTING</SublineSmall>
+            <br></br>
+            <div>
+              <InputDate
+                name="TestingStart"
+                type="datetime-local"
+                placeholder="Start"
+              ></InputDate>
+              <InputDate
+                name="TestingEnd"
+                type="datetime-local"
+                placeholder="Ende"
+              ></InputDate>
+            </div>
+          </Row>
+          <Row>
+            <TextNormal>Kam aus Testing zurück?</TextNormal>
+            <InputCheckbox
+              type="checkbox"
+              name="returntFromTesting"
+              onChange={() => {
+                setReturntFromTesting(true);
               }}
-              name="polishingAfterTestingStart"
-              type="datetime-local"
-              placeholder="Start"
-            ></InputDate>
-            <InputDate
-              onChange={(event) => {
-                setPolishingAfterTestingEnd(event.target.value);
-              }}
-              name="polishingAfterTestingEnd"
-              type="datetime-local"
-              placeholder="Ende"
-            ></InputDate>
-          </div>
-        )}
-        <div>
-          <TextNormal>QA</TextNormal>
-          <div>
-            <InputDate
-              /*  onChange={(event) => {
-                setQAStart(event.target.value);
-              }} */
-              name="QAStart"
-              type="datetime-local"
-              placeholder="Start"
-            ></InputDate>
-            <InputDate
-              /*  onChange={(event) => {
-                setQAEnd(event.target.value);
-              }} */
-              name="QAEnd"
-              type="datetime-local"
-              placeholder="Ende"
-            ></InputDate>
-          </div>
-        </div>
-        <div>
-          <TextNormal>Kam durch QA im ersten Anlauf durch?</TextNormal>
-          <input type="checkbox" name="gotThroughQaAtFirstTime"></input>
-        </div>
-        {/* brauch ich das unbedingt oder kann ich auch einfach alles unter QA lassen? */}
-        {/*  <div>
+            ></InputCheckbox>
+            {returntFromTesting && (
+              <>
+                <br></br>
+                <SublineSmall>POLISHING AFTER TESTING</SublineSmall>
+                <br></br>
+                <div>
+                  <InputDate
+                    onChange={(event) => {
+                      setPolishingAfterTestingStart(event.target.value);
+                    }}
+                    name="polishingAfterTestingStart"
+                    type="datetime-local"
+                    placeholder="Start"
+                  ></InputDate>
+                  <InputDate
+                    onChange={(event) => {
+                      setPolishingAfterTestingEnd(event.target.value);
+                    }}
+                    name="polishingAfterTestingEnd"
+                    type="datetime-local"
+                    placeholder="Ende"
+                  ></InputDate>
+                </div>
+              </>
+            )}
+          </Row>
+          <Row>
+            <SublineSmall>QA</SublineSmall>
+            <div>
+              <InputDate
+                name="QAStart"
+                type="datetime-local"
+                placeholder="Start"
+              ></InputDate>
+              <InputDate
+                name="QAEnd"
+                type="datetime-local"
+                placeholder="Ende"
+              ></InputDate>
+            </div>
+          </Row>
+          <Row>
+            <TextNormal>Kam durch QA im ersten Anlauf durch?</TextNormal>
+            <InputCheckbox
+              type="checkbox"
+              name="gotThroughQaAtFirstTime"
+            ></InputCheckbox>
+          </Row>
+          {/* brauch ich das unbedingt oder kann ich auch einfach alles unter QA lassen? */}
+          {/*  <div>
           <TextNormal>Kam aus QA zurück?</TextNormal>
           <input
             type="checkbox"
@@ -185,20 +156,19 @@ function InputContainer({
           </div>
         )} */}
 
-        <div>
-          <TextNormal>HELP NEEDED?</TextNormal>
-          <div>
-            <input
+          <Row>
+            <TextNormal>Wurde Hilfe gebraucht?</TextNormal>
+            <InputCheckbox
               type="checkbox"
               name="helpNeeded"
               onChange={() => {
                 setHelpNeeded(true);
               }}
-            ></input>
-          </div>
-        </div>
-        <SubmitButton type="submit">SPEICHERN</SubmitButton>
-      </form>
+            ></InputCheckbox>
+          </Row>
+          <SubmitButton type="submit">SPEICHERN</SubmitButton>
+        </Form>
+      )}
     </div>
   );
 }
@@ -206,21 +176,59 @@ function InputContainer({
 export default InputContainer;
 
 const SublineBig = styled.h1`
+  margin-top: 20px;
   color: lightgreen;
   font-size: 16px;
 `;
 
-const TextNormal = styled.span`
+const SublineSmall = styled.span`
   color: grey;
   font-size: 14px;
 `;
 
+const TextNormal = styled.span`
+  color: lightgrey;
+  font-size: 13px;
+`;
+
+const InputCheckbox = styled.input`
+  input[type="checkbox"] {
+    /* ...existing styles */
+    display: grid;
+    place-content: center;
+  }
+
+  input[type="checkbox"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em pink;
+  }
+
+  input[type="checkbox"]:checked::before {
+    transform: scale(1);
+  }
+`;
+
 const InputText = styled.input`
-  color: grey;
+  color: lightgrey;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1 px solid lightgrey;
 `;
 
 const InputDate = styled.input`
-  color: grey;
+  color: lightgrey;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1 px solid lightgrey;
+  &:first-child {
+    margin-right: 8px;
+  }
 `;
 
 const SubmitButton = styled.button`
@@ -228,6 +236,15 @@ const SubmitButton = styled.button`
   border: 1px solid lightgreen;
   color: lightgreen;
   background-color: transparent;
+`;
+
+const Row = styled.div`
+  margin: 10px 0;
+`;
+
+const Form = styled.form`
+  border: 1px solid lightgreen;
+  padding: 10px;
 `;
 
 //Nacharbeiten nach Testing als Zeit aufnehmen oder einfach nur als Boolean?

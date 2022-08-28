@@ -2,18 +2,11 @@ import "./App.css";
 import React, { useState } from "react";
 import InputContainer from "./components/InputContainer/InputContainer";
 import Card from "./components/OutputContainer/Card";
+import styled from "styled-components";
 
 function App() {
-  // const [name, setName] = useState("");
-  // const [firstContact, setFirstContact] = useState("");
-  // const [inProgressStart, setInProgressStart] = useState("");
-  // const [inProgressEnd, setInProgressEnd] = useState("");
-  // const [QAStart, setQAStart] = useState("");
-  // const [QAEnd, setQAEnd] = useState("");
   const [returntFromTesting, setReturntFromTesting] = useState(false);
   const [gotThroughQaAtFirstTime, setGotThroughQaAtFirstTime] = useState(false);
-  //const [TestingStart, setTestingStart] = useState("");
-  //const [TestingEnd, setTestingEnd] = useState("");
   const [polishingAfterQAStart, setPolishingAfterQAStart] = useState("");
   const [polishingAfterQAEnd, setPolishingAfterQAEnd] = useState("");
   const [helpNeeded, setHelpNeeded] = useState(false);
@@ -23,37 +16,17 @@ function App() {
 
   const [cards, setCards] = useState([]);
 
-  /*   function handleSubmit(event) {
-    event.preventDefault();
-    const form = event.target;
-    const {
-      title: titleInput,
-      details: detailsTextarea,
-      color: colorInput,
-    } = form.elements;
-    const newCard = {
-      title: titleInput.value,
-      details: detailsTextarea.value,
-      color: colorInput.value,
-    };
-    setCards([newCard, ...cards]);
-  } */
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.target;
     const {
       name,
-      firstContact,
       inProgressStart,
       inProgressEnd,
       QAStart,
       QAEnd,
-      //returntFromTesting,
       TestingStart,
       TestingEnd,
-      //polishingAfterQAStart,
-      //polishingAfterQAEnd,
       polishingAfterTestingStart,
       polishingAfterTestingEnd,
       helpNeeded,
@@ -62,7 +35,6 @@ function App() {
     console.log("kommt an");
     const newTicketObject = {
       name: name.value,
-      firstContact: firstContact.value,
       inProgressStart: inProgressStart.value,
       inProgressEnd: inProgressEnd.value,
 
@@ -74,12 +46,9 @@ function App() {
 
       polishingAfterTestingStart: polishingAfterTestingStart,
       polishingAfterTestingEnd: polishingAfterTestingEnd,
-      // polishingAfterQAStart: polishingAfterQAStart,
-      // polishingAfterQAEnd: polishingAfterQAEnd,
 
       helpNeeded: helpNeeded.checked,
       gotThroughQaAtFirstTime: gotThroughQaAtFirstTime.checked,
-      // returntFromTesting: returntFromTesting.checked,
     };
     setCards([newTicketObject, ...cards]);
     console.log("cards", cards);
@@ -89,56 +58,56 @@ function App() {
   return (
     <div>
       <InputContainer
-        /*  name={name}
-        setName={setName}
-        firstContact={firstContact}
-        setFirstContact={setFirstContact}
-        inProgressStart={inProgressStart}
-        setInProgressStart={setInProgressStart}
-        inProgressEnd={inProgressEnd}
-        setInProgressEnd={setInProgressEnd}
-        QAStart={QAStart}
-        setQAStart={setQAStart}
-        QAEnd={QAEnd}
-        setQAEnd={setQAEnd}
-        TestingStart={TestingStart}
-        setTestingStart={setTestingStart}
-        TestingEnd={TestingEnd}
-        setTestingEnd={setTestingEnd}
-        polishingAfterQAStart={polishingAfterQAStart}
-        */
         setPolishingAfterQAStart={setPolishingAfterQAStart}
-        //polishingAfterQAEnd={polishingAfterQAEnd}
         setPolishingAfterEnd={setPolishingAfterQAEnd}
         setPolishingAfterTestingStart={setPolishingAfterTestingStart}
         setPolishingAfterTestingEnd={setPolishingAfterTestingEnd}
-        //helpNeeded={helpNeeded}
         setHelpNeeded={setHelpNeeded}
         handleSubmit={handleSubmit}
         returntFromTesting={returntFromTesting}
         setReturntFromTesting={setReturntFromTesting}
         setGotThroughQaAtFirstTime={setGotThroughQaAtFirstTime}
       />
-      {cards.map((card) => (
-        <Card
-          name={card.name}
-          firstContact={card.firstContact}
-          inProgressStart={card.inProgressStart}
-          inProgressEnd={card.inProgressEnd}
-          QAStart={card.QAStart}
-          QAEnd={card.QAEnd}
-          TestingStart={card.TestingStart}
-          TestingEnd={card.TestingEnd}
-          //polishingAfterQAStart={card.}
-          //polishingAfterQAEnd={card.}
-          polishingAfterTestingStart={card.polishingAfterTestingStart}
-          polishingAfterTestingEnd={card.polishingAfterTestingEnd}
-          helpNeeded={card.helpNeeded}
-          gotThroughQaAtFirstTime={card.gotThroughQaAtFirstTime}
-        />
-      ))}
+      <TicketContainer>
+        {cards.map((card) => (
+          <Card
+            name={card.name}
+            firstContact={card.inProgressStart}
+            inProgressStart={card.inProgressStart}
+            inProgressEnd={card.inProgressEnd}
+            QAStart={card.QAStart}
+            QAEnd={card.QAEnd}
+            TestingStart={card.TestingStart}
+            TestingEnd={card.TestingEnd}
+            polishingAfterTestingStart={card.polishingAfterTestingStart}
+            polishingAfterTestingEnd={card.polishingAfterTestingEnd}
+            helpNeeded={card.helpNeeded}
+            gotThroughQaAtFirstTime={card.gotThroughQaAtFirstTime}
+          />
+        ))}
+      </TicketContainer>
     </div>
   );
 }
 
 export default App;
+
+const TicketContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-left: 7%;
+`;
+
+// polishing nur testing oder auch qa? -> sonst umbennen
+// Nacht rausrechnen?
+// server
+//beim Balken vielleicht Spielraum von 1-2 Stunden lassen, bis er rot wird
+// x für deleten des tickets
+
+//Nacharbeiten nach Testing als Zeit aufnehmen oder einfach nur als Boolean?
+// und dann stattdessen Gesamtzeit von Testing und Rejected
+// Polishing wäre dann wirklich nur rein QA
+
+// oder Polishing streichen und rejected ist = testing. Somit Rejected optional machen
+// QA umfasst dann auch Polishing als Nacharbeit

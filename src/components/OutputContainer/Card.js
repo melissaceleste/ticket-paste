@@ -13,8 +13,6 @@ function Card({
   QAEnd,
   TestingStart,
   TestingEnd,
-  //polishingAfterQAStart,
-  //polishingAfterQAEnd,
   polishingAfterTestingStart,
   polishingAfterTestingEnd,
   helpNeeded,
@@ -56,26 +54,6 @@ function Card({
     DurationQAInMinutes = 0;
   }
 
-  const DurationCompletly =
-    DurationInProgressInMinutes +
-    DurationQAInMinutes +
-    DurationTestingInMinutes +
-    DurationPolishingInMinutes;
-
-  // Kreisdiagram
-  const DurationInProgressInPercent =
-    (DurationInProgressInMinutes * 100) / DurationCompletly;
-  const DurationQAInPercent = (DurationQAInMinutes * 100) / DurationCompletly;
-  const DurationTestingInPercent =
-    (DurationTestingInMinutes * 100) / DurationCompletly;
-  const DurationPolishingInPercent =
-    (DurationPolishingInMinutes * 100) / DurationCompletly;
-
-  // Balken
-  const Soll = 480; //minuten - 8*60
-  const DiffSollIst = Soll - DurationInProgressInMinutes;
-  //beim Balken vielleicht Spielraum von 1-2 Stunden lassen, bis er rot wird
-
   const firstContactInLocalDateFormat = moment
     .utc()
     .local(firstContact)
@@ -102,7 +80,12 @@ function Card({
 
   return (
     <CardContainer>
-      <SublineBig>{name}</SublineBig>
+      <FurtherInformation>
+        <SublineBig>{name}</SublineBig>
+        <TextNormal>{firstContactInLocalDateFormat}</TextNormal>
+        {!helpNeeded && <div>☆</div>}
+        {!gotThroughQaAtFirstTime && <div>★</div>}
+      </FurtherInformation>
       <PieChart
         style={{ height: "100px" }}
         lineWidth={25}
@@ -117,11 +100,6 @@ function Card({
         radius={42}
         labelPosition={112}
       />
-      <FurtherInformation>
-        <TextNormal>{firstContactInLocalDateFormat}</TextNormal>
-        {!helpNeeded && <div>☆</div>}
-        {!gotThroughQaAtFirstTime && <div>★</div>}
-      </FurtherInformation>
       <ProgressCharInner
         DurationInProgressInMinutes={DurationInProgressInMinutes}
       ></ProgressCharInner>
@@ -135,6 +113,7 @@ export default Card;
 const SublineBig = styled.h1`
   color: lightgreen;
   font-size: 16px;
+  margin: 0;
 `;
 
 const TextNormal = styled.span`
@@ -152,21 +131,29 @@ const ProgressCharInner = styled.div`
   width: ${(props) => props.DurationInProgressInMinutes + "px"};
   height: 10px;
   background-color: #7fff00;
+  position: relative;
+  top: 12px;
+  right: -12px;
 `;
 
 const ProgressCharOuter = styled.div`
+  margin: 0 10px 10px;
   width: 480px;
   height: 10px;
-  background-color: #d3d3d3;
+  padding: 1px;
+  border: 1px solid lightgrey;
 `;
 
 const CardContainer = styled.div`
-  border: 1px solid pink;
-  margin: 10px;
-  width: 600px;
+  margin: 10px 0;
+  width: 500px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 1px 6px 11px 9px #eee;
+  padding: 10px;
 `;
 
 // polishing nur testing oder auch qa? -> sonst umbennen
 // Nacht rausrechnen?
 // server
-// deployen
+//beim Balken vielleicht Spielraum von 1-2 Stunden lassen, bis er rot wird
